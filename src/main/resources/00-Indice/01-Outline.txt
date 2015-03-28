@@ -1,0 +1,10 @@
+Las carpetas del notebook estan distribuidas de la siguiente manera:
+00-Indice
+01-Resumen
+02-Reportes de ciclos del proyecto
+03-Task and Schedule planeados y reales
+04-Documentos del proceso
+05-Datos planeados y actuales del sistema
+06-Planes y datos de prueba
+07-Reportes de inspección y log de defectos
+08-Notas de trabajo y documentos
