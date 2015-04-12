@@ -19,7 +19,10 @@ EJECUCIÓN
 
 Luego de compilar el proyecto, ubicados en la raiz de la carpeta, la aplicación se puede ejecutar con el comando:
 
-java -cp target/TSPiStatusQuo-1.0-SNAPSHOT.jar com.ecos.tspistatusquo.controller.Main
+mvn install
+foreman start
+
+Ejecutar en el navegador http://localhost:5100
 
 El programa lee las aplicaciones a analizar en site/resources/Proyectos
 
