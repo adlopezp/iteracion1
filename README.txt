@@ -20,7 +20,7 @@ EJECUCIÓN
 Luego de compilar el proyecto, ubicados en la raiz de la carpeta, la aplicación se puede ejecutar con el comando:
 
 mvn install
-foreman start
+foreman start web1
 
 Ejecutar en el navegador http://localhost:5100
 
