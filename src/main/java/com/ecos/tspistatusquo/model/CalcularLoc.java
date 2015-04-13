@@ -4,12 +4,11 @@
  */
 package com.ecos.tspistatusquo.model;
 
+import com.ecos.tspistatusquo.exceptions.ExceptionApp;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -47,39 +46,27 @@ public class CalcularLoc {
     private DataInputStream entrada = null;
     private BufferedReader buffer;
     private String strLinea = null;
-    private Properties prop = new Properties();
-    private static String sDirectorioTrabajo = System.getProperty("user.dir");
-    private static String sSeparator = System.getProperty("file.separator");
     private boolean enMetodo = false;
     private int contadorCorchetes = 0;
 
     /**
      * CalcularLoc
-     * 
-     * metodo constructor encargado de inicializar el modulo de configuracion de reglas de analisis de programas , carga el archivo de propiedades con las reglas de validacion 
-     * 
+     *
+     * metodo constructor encargado de inicializar el modulo de configuracion de
+     * reglas de analisis de programas , carga el archivo de propiedades con las
+     * reglas de validacion
+     *
      */
-    public CalcularLoc() {
-        String propFileName = "ConfigProperties.properties";
-        try {
-            InputStream inputStream = new FileInputStream(sDirectorioTrabajo + sSeparator + propFileName);
-            if (inputStream != null) {
-                prop.load(inputStream);
-            } else {
-                throw new FileNotFoundException("El Archivo de propiedades '" + propFileName + "' no se encuentra en el CLASSPATH");
-            }
-        } catch (FileNotFoundException ex) {
-            System.out.println("Ocurrio un Error : " + ex.getMessage());
-        } catch (Exception ex) {
-            System.out.println("Ocurrio un Error : " + ex.getMessage());
-        }
+    public CalcularLoc() throws Exception {
+        Configuraciones.cargaPropiedades();
     }
 
     /**
      * leerRuta
-     * 
-     * recorre recursivamente el directorio selecionado para el analsis de los programas e identifica los paquetes conformados por el programa
-     * 
+     *
+     * recorre recursivamente el directorio selecionado para el analsis de los
+     * programas e identifica los paquetes conformados por el programa
+     *
      * @param ruta
      * @param separador
      * @throws Exception
@@ -99,7 +86,7 @@ public class CalcularLoc {
                     if (ficheros[x].isDirectory()) {
                         leerRuta(ruta + separador + ficheros[x].getName(), separador);
                     } else {
-                        if (ficheros[x].getName().toLowerCase().contains(getProp().getProperty("extencion"))) {
+                        if (ficheros[x].getName().toLowerCase().contains(Configuraciones.getProp().getProperty("extencion"))) {
                             paqueteActual = ruta.substring(ruta.indexOf(getNombreProyecto()), ruta.length()).replace(separador, ".");
                             paqueteActual = paqueteActual.replace("..", ".");
                             if (paqueteActual.charAt(paqueteActual.length() - 1) == '.') {
@@ -130,82 +117,90 @@ public class CalcularLoc {
             }
         } catch (Exception e) {
             System.out.println("Ocurrio un Error : " + e.getMessage());
+            throw new ExceptionApp("Error al leer la ruta del programa. " + e.getMessage());
         }
     }
 
     /**
      * SumarVariables
-     * 
-     * realiza el conteo y validacion de reglas asignando y acomulando las variables del proceso de analisis para consolidar el resumen de el programa
-     * 
+     *
+     * realiza el conteo y validacion de reglas asignando y acomulando las
+     * variables del proceso de analisis para consolidar el resumen de el
+     * programa
+     *
      * @param linea
-     * 
+     *
      */
-    private void SumarVariables(String linea) {
-        boolean flag = true;
-        Pattern pt;
-        Matcher matcher;
-        if (flag) {
-            pt = Pattern.compile(getProp().getProperty("regex.clases"), Pattern.CASE_INSENSITIVE);
-            matcher = pt.matcher(linea);
-            while (matcher.find()) {
-                indexClass++;
-                contadorLocClases.add(BigInteger.ZERO);
-                nombreClases.add(new ArrayList<String>());
-                nombreAtributos.add(new ArrayList<String>());
-                nombreMetodos.add(new ArrayList<String>());
-                contadorLocMetodos.add(new ArrayList<BigInteger>());
-                indexMetodos = -1;
-                nombreClases.get(indexClass).add(matcher.group(1) + matcher.group(2) + " " + matcher.group(3));
-                flag = false;
+    private void SumarVariables(String linea) throws Exception{
+        try {
+            boolean flag = true;
+            Pattern pt;
+            Matcher matcher;
+            if (flag) {
+                pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.clases"), Pattern.CASE_INSENSITIVE);
+                matcher = pt.matcher(linea);
+                while (matcher.find()) {
+                    indexClass++;
+                    contadorLocClases.add(BigInteger.ZERO);
+                    nombreClases.add(new ArrayList<String>());
+                    nombreAtributos.add(new ArrayList<String>());
+                    nombreMetodos.add(new ArrayList<String>());
+                    contadorLocMetodos.add(new ArrayList<BigInteger>());
+                    indexMetodos = -1;
+                    nombreClases.get(indexClass).add(matcher.group(1) + matcher.group(2) + " " + matcher.group(3));
+                    flag = false;
+                }
             }
-        }
-        if (flag) {
-            pt = Pattern.compile(getProp().getProperty("regex.atributos"), Pattern.CASE_INSENSITIVE);
-            matcher = pt.matcher(linea);
-            while (matcher.find()) {
-                nombreAtributos.get(indexClass).add(matcher.group(1) + " " + matcher.group(2) + " " + matcher.group(3));
-                flag = false;
+            if (flag) {
+                pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.atributos"), Pattern.CASE_INSENSITIVE);
+                matcher = pt.matcher(linea);
+                while (matcher.find()) {
+                    nombreAtributos.get(indexClass).add(matcher.group(1) + " " + matcher.group(2) + " " + matcher.group(3));
+                    flag = false;
+                }
             }
-        }
-        if (flag) {
-            pt = Pattern.compile(getProp().getProperty("regex.metodos"), Pattern.MULTILINE);
-            matcher = pt.matcher(linea);
-            while (matcher.find()) {
-                indexMetodos++;
-                nombreMetodos.get(indexClass).add(matcher.group(1) + " " + matcher.group(2) + " " + matcher.group(4));
-                flag = false;
-                setEnMetodo(true);
-                contadorCorchetes = 0;
+            if (flag) {
+                pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.metodos"), Pattern.MULTILINE);
+                matcher = pt.matcher(linea);
+                while (matcher.find()) {
+                    indexMetodos++;
+                    nombreMetodos.get(indexClass).add(matcher.group(1) + " " + matcher.group(2) + " " + matcher.group(4));
+                    flag = false;
+                    setEnMetodo(true);
+                    contadorCorchetes = 0;
 
+                }
             }
-        }
-        if (linea.contains("{") && isEnMetodo() == true) {
-            contadorCorchetes++;
-        }
-        if (linea.contains("}") && isEnMetodo() == true) {
-            contadorCorchetes--;
-            if (contadorCorchetes == 0) {
-                getContadorLocMetodos().get(indexClass).add(getContadorLocMetodo());
-                setContadorLocMetodo(BigInteger.ZERO);
-                setEnMetodo(false);
+            if (linea.contains("{") && isEnMetodo() == true) {
+                contadorCorchetes++;
             }
-        }
-        pt = Pattern.compile(getProp().getProperty("regex.contadorLOC"), Pattern.CASE_INSENSITIVE);
-        matcher = pt.matcher(linea);
-        while (matcher.find()) {
-            contadorLocClases.set(indexClass, contadorLocClases.get(indexClass).add(BigInteger.ONE));
-            setContadorLoc(contadorLoc.add(BigInteger.ONE));
-            if (isEnMetodo() == true && getContadorCorchetes() != 0) {
-                setContadorLocMetodo(contadorLocMetodo.add(BigInteger.ONE));
+            if (linea.contains("}") && isEnMetodo() == true) {
+                contadorCorchetes--;
+                if (contadorCorchetes == 0) {
+                    getContadorLocMetodos().get(indexClass).add(getContadorLocMetodo());
+                    setContadorLocMetodo(BigInteger.ZERO);
+                    setEnMetodo(false);
+                }
             }
-        }
+            pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.contadorLOC"), Pattern.CASE_INSENSITIVE);
+            matcher = pt.matcher(linea);
+            while (matcher.find()) {
+                contadorLocClases.set(indexClass, contadorLocClases.get(indexClass).add(BigInteger.ONE));
+                setContadorLoc(contadorLoc.add(BigInteger.ONE));
+                if (isEnMetodo() == true && getContadorCorchetes() != 0) {
+                    setContadorLocMetodo(contadorLocMetodo.add(BigInteger.ONE));
+                }
+            }
 
-        if (linea.toLowerCase().contains("//m")) {
-            setContadorLMod(contadorLMod.add(BigInteger.ONE));
-        }
-        if (linea.toLowerCase().contains("//e")) {
-            setContadorLEli(contadorLEli.add(BigInteger.ONE));
+            if (linea.toLowerCase().contains("//m")) {
+                setContadorLMod(contadorLMod.add(BigInteger.ONE));
+            }
+            if (linea.toLowerCase().contains("//e")) {
+                setContadorLEli(contadorLEli.add(BigInteger.ONE));
+            }
+        } catch (Exception ex) {
+            System.out.println("Ocurrio un Error : " + ex.getMessage());
+            throw new ExceptionApp("Error al calcular las variables de anailis del programa. " + ex.getMessage());
         }
     }
 
@@ -416,22 +411,6 @@ public class CalcularLoc {
      */
     public void setClasesXpaquetes(List<BigInteger> clasesXpaquetes) {
         this.clasesXpaquetes = clasesXpaquetes;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Properties getProp() {
-        return prop;
-    }
-
-    /**
-     *
-     * @param prop
-     */
-    public void setProp(Properties prop) {
-        this.prop = prop;
     }
 
     /**
