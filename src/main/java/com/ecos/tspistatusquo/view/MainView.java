@@ -70,7 +70,8 @@ public class MainView {
             analisisPrograma.add(programa);
             programa = new CalcularLoc();
             programa.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve6" + sSeparator, sSeparator);
-
+            analisisPrograma.add(programa);
+            
             resp.getWriter().println("<script>");
             resp.getWriter().println("var seleccionado = 'programa0';");
             resp.getWriter().println("function seleccionarTabla(combo) {");
