@@ -17,8 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MainView {
 
-    public static void showHome(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    public static void showHome(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         resp.setContentType("text/html");
         resp.getWriter().println("<style type=\"text/css\">");
@@ -104,8 +103,7 @@ public class MainView {
         }
     }
 
-    public static void showResults(HttpServletRequest req, HttpServletResponse resp, List<CalcularProbe> res)
-            throws ServletException, IOException {
+    public static void showResults(HttpServletRequest req, HttpServletResponse resp, List<CalcularProbe> res) throws ServletException, IOException {
         resp.getWriter().println("<table class=\"myTable\">");
         resp.getWriter().println("<tr><td colspan=\"11\">Metodo PROBE</td></tr>");
         resp.getWriter().println("<tr>");
@@ -146,8 +144,7 @@ public class MainView {
         resp.getWriter().println("</table>");
     }
 
-    public static void error(HttpServletRequest req, HttpServletResponse resp, Exception ex)
-            throws ServletException, IOException {
+    public static void error(HttpServletRequest req, HttpServletResponse resp, Exception ex) throws ServletException, IOException {
         resp.getWriter().println("Error!!! :" + ex.getMessage());
     }
 }

@@ -34,8 +34,7 @@ public class MainView {
      * @throws ServletException
      * @throws IOException
      */
-    public static void showHome(HttpServletRequest req, HttpServletResponse resp, List<CalcularSimpsonRule> tabla)
-            throws ServletException, IOException {
+    public static void showHome(HttpServletRequest req, HttpServletResponse resp, List<CalcularSimpsonRule> tabla) throws ServletException, IOException {
 
         resp.setContentType("text/html");
         resp.getWriter().println("<style type=\"text/css\">");
@@ -113,8 +112,7 @@ public class MainView {
      * @throws ServletException
      * @throws IOException
      */
-    public static void error(HttpServletRequest req, HttpServletResponse resp, Exception ex)
-            throws ServletException, IOException {
+    public static void error(HttpServletRequest req, HttpServletResponse resp, Exception ex) throws ServletException, IOException {
         resp.getWriter().println("Error!!! :" + ex.getMessage());
     }
 }

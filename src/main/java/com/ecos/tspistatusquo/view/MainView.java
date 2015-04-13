@@ -6,11 +6,17 @@ package com.ecos.tspistatusquo.view;
 
 import com.ecos.tspistatusquo.model.CalcularLoc;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * MainView
+ *
+ * modela la capa de presentacion e interaciones con los usuarios
  *
  * @author Dev
  */
@@ -19,122 +25,216 @@ public class MainView {
     private static String sDirectorioTrabajo = System.getProperty("user.dir");
     private static String sSeparator = System.getProperty("file.separator");
 
-    public static void showHome(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        CalcularLoc e1 = new CalcularLoc();
-        CalcularLoc e2 = new CalcularLoc();
-        CalcularLoc e3 = new CalcularLoc();
-        CalcularLoc e4 = new CalcularLoc();
-        CalcularLoc e5 = new CalcularLoc();
-        CalcularLoc e6 = new CalcularLoc();
+    /**
+     * showHome
+     *
+     * devuelve la respuesta a la peticion http con la vista inicial de la
+     * aplicacion
+     *
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
+    public static void showHome(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<CalcularLoc> analisisPrograma = new ArrayList<CalcularLoc>();
         resp.setContentType("text/html");
         resp.getWriter().println("<style type=\"text/css\">");
-        resp.getWriter().println(".myTable { background-color:#eee;border-collapse:collapse; }");
+        resp.getWriter().println(".myTable { background-color:#eee;border-collapse:collapse;font-size:12px; }");
         resp.getWriter().println(".myTable th { background-color:#000;color:white;width:50%; }");
         resp.getWriter().println(".myTable td, .myTable th { padding:5px;border:1px solid #000; }");
         resp.getWriter().println("</style>");
 
         resp.getWriter().println("<style type=\"text/css\">");
-        resp.getWriter().println(".myOtherTable { background-color:#FFFFE0;border-collapse:collapse;color:#000;font-size:18px; }");
+        resp.getWriter().println(".myOtherTable { background-color:#FFFFE0;border-collapse:collapse;color:#000;font-size:12px; }");
         resp.getWriter().println(".myOtherTable th { background-color:#BDB76B;color:white;width:50%; }");
         resp.getWriter().println(".myOtherTable td, .myOtherTable th { padding:5px;border:0; }");
         resp.getWriter().println(".myOtherTable td { border-bottom:1px dotted #BDB76B; }");
         resp.getWriter().println("</style>");
 
-
-
         try {
-            e1.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve1" + sSeparator, sSeparator);//m
-            e2.leerRuta("src" + sSeparator + "main" + sSeparator + "java" + sSeparator + "com" + sSeparator + "ecos" + sSeparator + "tspistatusquo" + sSeparator, sSeparator);//m
-            e3.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve3" + sSeparator, sSeparator);
-            e4.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve4" + sSeparator, sSeparator);
-            e5.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve5" + sSeparator, sSeparator);
-            e6.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve6" + sSeparator, sSeparator);
-            resp.getWriter().println("Medicion de LOC");
-            resp.getWriter().println("<table class=\"myTable\">");
+            CalcularLoc programa = new CalcularLoc();
+            programa.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve1" + sSeparator, sSeparator);//m
+            analisisPrograma.add(programa);
+            programa = new CalcularLoc();
+            programa.leerRuta("src" + sSeparator + "main" + sSeparator + "java" + sSeparator + "com" + sSeparator + "ecos" + sSeparator + "tspistatusquo" + sSeparator, sSeparator);//m
+            analisisPrograma.add(programa);
+            programa = new CalcularLoc();
+            programa.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve3" + sSeparator, sSeparator);
+            analisisPrograma.add(programa);
+            programa = new CalcularLoc();
+            programa.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve4" + sSeparator, sSeparator);
+            analisisPrograma.add(programa);
+            programa = new CalcularLoc();
+            programa.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve5" + sSeparator, sSeparator);
+            analisisPrograma.add(programa);
+            programa = new CalcularLoc();
+            programa.leerRuta("src" + sSeparator + "site" + sSeparator + "resources" + sSeparator + "Proyectos" + sSeparator + "ecosdeve6" + sSeparator, sSeparator);
+
+            resp.getWriter().println("<script>");
+            resp.getWriter().println("var seleccionado = 'programa0';");
+            resp.getWriter().println("function seleccionarTabla(combo) {");
+
+            resp.getWriter().println("var activar = document.getElementById(combo);");
+            resp.getWriter().println("activar.style.display='block';");
+            resp.getWriter().println("var ocultar = document.getElementById(seleccionado);");
+            resp.getWriter().println("ocultar.style.display = 'none';");
+            resp.getWriter().println("seleccionado=combo;");
+            resp.getWriter().println("}");
+            resp.getWriter().println("</script>");
+
+            resp.getWriter().println("Analisis de programas");
+
+            resp.getWriter().println("<table>");
             resp.getWriter().println("<tr>");
-            resp.getWriter().println("<td>Numero Programa</td>");
-            resp.getWriter().println("<td>Tipo de parte</td>");
-            resp.getWriter().println("<td>Acceso, tipo, Nombre de parte</td>");
-            resp.getWriter().println("<td>Numero de Atributos</td>");
-            resp.getWriter().println("<td>Numero de Metodos</td>");
-            resp.getWriter().println("<td>Total de la parte</td>");
-            resp.getWriter().println("<td>Total tamaño</td>");
+            resp.getWriter().println("<td>Programa :</td>");
+            resp.getWriter().println("<td><select name=\"programas\" onchange=\"seleccionarTabla(this.value)\">");
+            for (int index = 0; index < analisisPrograma.size(); index++) {
+                resp.getWriter().println("<option value=\"programa" + index + "\" > " + analisisPrograma.get(index).getNombreProyecto() + " </option>");
+            }
+            resp.getWriter().println("</select></td>");
             resp.getWriter().println("</tr>");
-            agregarPrograma(resp, e1, 1); 
-            agregarPrograma(resp, e3, 2);
-            agregarPrograma(resp, e4, 3);
-            agregarPrograma(resp, e5, 4);
-            agregarPrograma(resp, e6, 5);
-            agregarPrograma(resp, e2, 6);
             resp.getWriter().println("</table>");
+            for (int index = 0; index < analisisPrograma.size(); index++) {
+                agregarPrograma(resp, analisisPrograma.get(index), index);
+            }
         } catch (Exception e) {
             resp.getWriter().print("Ocurrio un Error : " + e.getMessage());
         }
     }
 
-    private static void agregarPrograma(HttpServletResponse resp, CalcularLoc e1, int numeroPrograma) throws Exception {
-        for (int x = 0; x < e1.getNombreClases().size(); x++) {
-            resp.getWriter().println("<tr>");
-            resp.getWriter().println("<td>" + numeroPrograma + "</td>");
-            resp.getWriter().println("<td>Clase</td>");
-            resp.getWriter().println("<td>" + e1.getNombreClases().get(x).toString() + "</td>");
-            resp.getWriter().println("<td>" + e1.getNombreAtributos().get(x).size() + "</td>");
-            resp.getWriter().println("<td>" + e1.getNombreMetodos().get(x).size() + "</td>");
-            resp.getWriter().println("<td>" + e1.getContadorLocClases().get(x).toString() + "</td>");
-            resp.getWriter().println("<td></td>");
-            resp.getWriter().println("</tr>");
-            if (!e1.getNombreAtributos().get(x).isEmpty()) {
-                for (int i = 0; i < e1.getNombreAtributos().get(x).size(); i++) {
-                    resp.getWriter().println("<tr>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td>Atributo</td>");
-                    resp.getWriter().println("<td>               " + e1.getNombreAtributos().get(x).get(i).toString() + "</td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("</tr>");
-                }
-            }
-            if (!e1.getNombreMetodos().get(x).isEmpty()) {
-                for (int j = 0; j < e1.getNombreMetodos().get(x).size(); j++) {
-                    resp.getWriter().println("<tr>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td>Metodo</td>");
-                    resp.getWriter().println("<td>                              " + e1.getNombreMetodos().get(x).get(j).toString() + "</td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("<td></td>");
-                    resp.getWriter().println("</tr>");
-
-                }
-            }
+    /**
+     * agregarPrograma
+     *
+     * adiciona dinamicamente los programas adicionados para el analsis de sus caracteristicas
+     *
+     * 
+     * @param resp
+     * @param programa
+     * @param numeroPrograma
+     * @throws IOException
+     */
+    private static void agregarPrograma(HttpServletResponse resp, CalcularLoc programa, int numeroPrograma) throws Exception {
+        if (numeroPrograma == 0) {
+            resp.getWriter().println("<div id=\"programa" + numeroPrograma + "\" name=\"programa" + numeroPrograma + "\" style=\"display:block;\">");
+        } else {
+            resp.getWriter().println("<div id=\"programa" + numeroPrograma + "\" name=\"programa" + numeroPrograma + "\" style=\"display:none;\">");
         }
+        resp.getWriter().println("Nombre del Programa: " + programa.getNombreProyecto());
+        resp.getWriter().println("<table  class=\"myTable\">");
         resp.getWriter().println("<tr>");
-        resp.getWriter().println("<td>" + numeroPrograma + "</td>");
-        resp.getWriter().println("<td></td>");
-        resp.getWriter().println("<td></td>");
-        resp.getWriter().println("<td></td>");
-        resp.getWriter().println("<td>Lineas Eliminadas : " + e1.getContadorLEli() + "</td>");
-        resp.getWriter().println("<td>Lineas Modificadas : " + e1.getContadorLMod() + "</td>");
-        resp.getWriter().println("<td>Total :" + e1.getContadorLoc().toString() + "</td>");
+        resp.getWriter().println("<td>Numero de paquetes</td>");
+        resp.getWriter().println("<td> " + programa.getPaquetes().size() + "</td>");
+        resp.getWriter().println("<td>Numero de clases</td>");
+        resp.getWriter().println("<td> " + programa.getNombreClases().size() + "</td>");
+        resp.getWriter().println("<td> Numero de LOC</td>");
+        resp.getWriter().println("<td>" + programa.getContadorLoc() + "</td>");
         resp.getWriter().println("</tr>");
+        resp.getWriter().println("</table>");
+
+
+        resp.getWriter().println("Detalle de inspeccion");
+        resp.getWriter().println("<table class=\"myTable\">");
+        resp.getWriter().println("<tr>");
+        resp.getWriter().println("<td>Numero de parte</td>");
+        resp.getWriter().println("<td>Tipo de parte</td>");
+        resp.getWriter().println("<td>Acceso, tipo, Nombre de parte</td>");
+        resp.getWriter().println("<td>Numero de Atributos o clases</td>");
+        resp.getWriter().println("<td>Numero de Metodos</td>");
+        resp.getWriter().println("<td>Total de la parte</td>");
+        resp.getWriter().println("</tr>");
+        if (!programa.getPaquetes().isEmpty()) {
+            int contadorPaquete = 0;
+            int contadorclases = 0;
+            Iterator it = programa.getPaquetes().keySet().iterator();
+            while (it.hasNext()) {
+                contadorPaquete++;
+                String key = (String) it.next();
+                resp.getWriter().println("<tr>");
+                resp.getWriter().println("<td>" + contadorPaquete + "</td>");
+                resp.getWriter().println("<td>Paquete</td>");
+                resp.getWriter().println("<td>" + key + "</td>");
+                resp.getWriter().println("<td>" + programa.getPaquetes().get(key).size() + "</td>");
+                resp.getWriter().println("<td></td>");
+                resp.getWriter().println("<td></td>");
+                resp.getWriter().println("</tr>");
+                for (int index = 0; index < programa.getPaquetes().get(key).size(); index++) {
+                    contadorclases++;
+                    resp.getWriter().println("<tr>");
+                    resp.getWriter().println("<td>" + contadorclases + "</td>");
+                    resp.getWriter().println("<td>Clase</td>");
+                    resp.getWriter().println("<td>" + programa.getNombreClases().get(programa.getPaquetes().get(key).get(index).intValue()) + "</td>");
+                    resp.getWriter().println("<td>" + programa.getNombreAtributos().get(programa.getPaquetes().get(key).get(index).intValue()).size() + "</td>");
+                    resp.getWriter().println("<td>" + programa.getNombreMetodos().get(programa.getPaquetes().get(key).get(index).intValue()).size() + "</td>");
+                    resp.getWriter().println("<td>" + programa.getContadorLocClases().get(programa.getPaquetes().get(key).get(index).intValue()) + "</td>");
+                    resp.getWriter().println("</tr>");
+                    if (!programa.getNombreAtributos().get(programa.getPaquetes().get(key).get(index).intValue()).isEmpty()) {
+                        for (int i = 0; i < programa.getNombreAtributos().get(programa.getPaquetes().get(key).get(index).intValue()).size(); i++) {
+                            resp.getWriter().println("<tr>");
+                            resp.getWriter().println("<td>" + (i + 1) + "</td>");
+                            resp.getWriter().println("<td>Atributo</td>");
+                            resp.getWriter().println("<td>" + programa.getNombreAtributos().get(programa.getPaquetes().get(key).get(index).intValue()).get(i) + "</td>");
+                            resp.getWriter().println("<td></td>");
+                            resp.getWriter().println("<td></td>");
+                            resp.getWriter().println("<td>1</td>");
+                            resp.getWriter().println("</tr>");
+                        }
+                    }
+                    if (!programa.getNombreMetodos().get(programa.getPaquetes().get(key).get(index).intValue()).isEmpty()) {
+                        for (int j = 0; j < programa.getNombreMetodos().get(programa.getPaquetes().get(key).get(index).intValue()).size(); j++) {
+                            resp.getWriter().println("<tr>");
+                            resp.getWriter().println("<td>" + (j + 1) + "</td>");
+                            resp.getWriter().println("<td>Metodo</td>");
+                            resp.getWriter().println("<td>" + programa.getNombreMetodos().get(programa.getPaquetes().get(key).get(index).intValue()).get(j) + "</td>");
+                            resp.getWriter().println("<td></td>");
+                            resp.getWriter().println("<td></td>");
+                            resp.getWriter().println("<td>" + programa.getContadorLocMetodos().get(programa.getPaquetes().get(key).get(index).intValue()).get(j) + "</td>");
+                            resp.getWriter().println("</tr>");
+                        }
+                    }
+                }
+            }
+            resp.getWriter().println("<tr>");
+            resp.getWriter().println("<td></td>");
+            resp.getWriter().println("<td></td>");
+            resp.getWriter().println("<td></td>");
+            resp.getWriter().println("<td></td>");
+            resp.getWriter().println("<td></td>");
+            resp.getWriter().println("<td> Total :" + programa.getContadorLoc() + "</td>");
+            resp.getWriter().println("</tr>");
+            resp.getWriter().println("</table>");
+            resp.getWriter().println("</div>");
+        }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getsDirectorioTrabajo() {
         return sDirectorioTrabajo;
     }
 
+    /**
+     *
+     * @param sDirectorioTrabajo
+     */
     public void setsDirectorioTrabajo(String sDirectorioTrabajo) {
         this.sDirectorioTrabajo = sDirectorioTrabajo;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getsSeparator() {
         return sSeparator;
     }
 
+    /**
+     *
+     * @param sSeparator
+     */
     public void setsSeparator(String sSeparator) {
         this.sSeparator = sSeparator;
     }

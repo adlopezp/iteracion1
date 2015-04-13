@@ -39,8 +39,7 @@ public class App extends HttpServlet {
      * @throws IOException
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             List<CalcularSimpsonRule> ejercicios =new ArrayList<CalcularSimpsonRule>();
             CalcularSimpsonRule ejercicio=new CalcularSimpsonRule(new BigDecimal(0.00001).setScale(5, RoundingMode.HALF_UP), new BigDecimal(1).setScale(0, RoundingMode.HALF_UP), new BigDecimal(10).setScale(0, RoundingMode.HALF_UP), new BigDecimal(6).setScale(0, RoundingMode.HALF_UP),new BigDecimal(0.20).setScale(2, RoundingMode.HALF_UP));
