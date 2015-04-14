@@ -46,8 +46,8 @@ public class MainView {
             resp.getWriter().println("body { font-family: 'Open Sans', sans-serif;}");
             resp.getWriter().println(".titulo1 { font-size: 20px; font-weight: bold; }");
             resp.getWriter().println(".titulo2 { font-size: 15px; font-weight: bold; }");
-            resp.getWriter().println(".myTable { background-color:#F0F0F0; border-collapse:collapse;font-size:13px; }");
-            resp.getWriter().println(".myTable th { background-color:#CCCCCC;}");
+            resp.getWriter().println(".myTable {background-color:#F0F0F0; border-collapse:collapse;font-size:13px; }");
+            resp.getWriter().println(".myTable th {background-color:#CCCCCC;}");
             resp.getWriter().println(".myTable td, .myTable th { padding:5px;border:1px solid #000; }");
             resp.getWriter().println("</style>");
 
