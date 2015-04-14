@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ecos.tspistatusquo.model;
 
 import com.ecos.tspistatusquo.exceptions.ExceptionApp;
@@ -15,12 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
+ *  Clase encargada de calcular la cantidad de LOC
  * @author Dev
  */
 public class CalcularLoc {
@@ -86,7 +81,7 @@ public class CalcularLoc {
                     if (ficheros[x].isDirectory()) {
                         leerRuta(ruta + separador + ficheros[x].getName(), separador);
                     } else {
-                        if (ficheros[x].getName().toLowerCase().contains(Configuraciones.getProp().getProperty("extencion"))) {
+                        if (ficheros[x].getName().toLowerCase().contains(Configuraciones.getProp().getProperty("extension"))) {
                             paqueteActual = ruta.substring(ruta.indexOf(getNombreProyecto()), ruta.length()).replace(separador, ".");
                             paqueteActual = paqueteActual.replace("..", ".");
                             if (paqueteActual.charAt(paqueteActual.length() - 1) == '.') {

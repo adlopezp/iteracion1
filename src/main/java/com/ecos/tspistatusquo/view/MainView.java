@@ -83,10 +83,12 @@ public class MainView {
             resp.getWriter().println("seleccionado=combo;");
             resp.getWriter().println("}");
             resp.getWriter().println("</script>");
+            
+            resp.getWriter().println("<div style=\"text-align: center;\">");
+            resp.getWriter().println("<H2>Status Quo</H2>");
+            resp.getWriter().println("<H3>Proyecto 1: </H3> <p>An&aacute;lisis de programas</p>");
 
-            resp.getWriter().println("Analisis de programas");
-
-            resp.getWriter().println("<table>");
+            resp.getWriter().println("<table align=\"center\">");
             resp.getWriter().println("<tr>");
             resp.getWriter().println("<td>Programa :</td>");
             resp.getWriter().println("<td><select name=\"programas\" onchange=\"seleccionarTabla(this.value)\">");
@@ -96,6 +98,9 @@ public class MainView {
             resp.getWriter().println("</select></td>");
             resp.getWriter().println("</tr>");
             resp.getWriter().println("</table>");
+            resp.getWriter().println("</div>");
+            resp.getWriter().println("<HR width=50% align=\"center\">");
+            
             for (int index = 0; index < analisisPrograma.size(); index++) {
                 agregarPrograma(resp, analisisPrograma.get(index), index);
             }
@@ -123,8 +128,9 @@ public class MainView {
             } else {
                 resp.getWriter().println("<div id=\"programa" + numeroPrograma + "\" name=\"programa" + numeroPrograma + "\" style=\"display:none;\">");
             }
-            resp.getWriter().println("Nombre del Programa: " + programa.getNombreProyecto());
-            resp.getWriter().println("<table  class=\"myTable\">");
+            resp.getWriter().println("<p>1. <u>Nombre del Programa:</u> " + programa.getNombreProyecto()+"</p>");
+            resp.getWriter().println("<p>2. <u>Descripci&oacute;n del Programa:</u></p> ");
+            resp.getWriter().println("<table  class=\"myTable\" style=\"margin: 0 auto;\">");
             resp.getWriter().println("<tr>");
             resp.getWriter().println("<td>Numero de paquetes</td>");
             resp.getWriter().println("<td> " + programa.getPaquetes().size() + "</td>");
@@ -136,8 +142,8 @@ public class MainView {
             resp.getWriter().println("</table>");
 
 
-            resp.getWriter().println("Detalle de inspeccion");
-            resp.getWriter().println("<table class=\"myTable\">");
+            resp.getWriter().println("<p>3. <u>Detalle de inspecci&oacute;n:</u></p>");
+            resp.getWriter().println("<table class=\"myTable\" style=\"margin: 0 auto;\">");
             resp.getWriter().println("<tr>");
             resp.getWriter().println("<td>Numero de parte</td>");
             resp.getWriter().println("<td>Tipo de parte</td>");
