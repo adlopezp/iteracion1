@@ -41,6 +41,7 @@ public class MainView {
         try {
             List<CalcularLoc> analisisPrograma = new ArrayList<CalcularLoc>();
             resp.setContentType("text/html");
+            resp.getWriter().println("<html><head>");
             resp.getWriter().println("<style type=\"text/css\">");
             resp.getWriter().println(".myTable { background-color:#eee;border-collapse:collapse;font-size:12px; }");
             resp.getWriter().println(".myTable th { background-color:#000;color:white;width:50%; }");
@@ -83,6 +84,8 @@ public class MainView {
             resp.getWriter().println("seleccionado=combo;");
             resp.getWriter().println("}");
             resp.getWriter().println("</script>");
+            resp.getWriter().println("</head>");
+            resp.getWriter().println("<body>");
             
             resp.getWriter().println("<div style=\"text-align: center;\">");
             resp.getWriter().println("<H2>Status Quo</H2>");
@@ -104,7 +107,10 @@ public class MainView {
             for (int index = 0; index < analisisPrograma.size(); index++) {
                 agregarPrograma(resp, analisisPrograma.get(index), index);
             }
+            resp.getWriter().println("</body>");
+            resp.getWriter().println("</html>");
         } catch (Exception e) {
+            e.printStackTrace();
             error(req, resp, e);
         }
     }
@@ -215,6 +221,7 @@ public class MainView {
                 resp.getWriter().println("</div>");
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new ExceptionApp("Error al agregar los resultados del programa. " + ex.getMessage());
         }
     }
