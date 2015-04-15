@@ -4,7 +4,7 @@
 
   <groupId>co.edu.uniandes.ecos</groupId>
   <artifactId>TSPiStatusQuo</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>TSPiStatusQuo</name>

@@ -77,7 +77,7 @@ public class MainView {
             analisisPrograma.add(programa);
 
             resp.getWriter().println("<script>");
-            resp.getWriter().println("var seleccionado = 'programa0';");
+            resp.getWriter().println("var seleccionado = 'seleccione';");
             resp.getWriter().println("function seleccionarTabla(combo) {");
             resp.getWriter().println("var activar = document.getElementById(combo);");
             resp.getWriter().println("activar.style.display='block';");
@@ -98,6 +98,8 @@ public class MainView {
             resp.getWriter().println("<tr>");
             resp.getWriter().println("<td>Seleccionar Programa :</td>");
             resp.getWriter().println("<td><select name=\"programas\" onchange=\"seleccionarTabla(this.value)\">");
+            resp.getWriter().println("<option value=\"seleccione\" >Seleccione...</option>");
+            
             for (int index = 0; index < analisisPrograma.size(); index++) {
                 resp.getWriter().println("<option value=\"programa" + index + "\" > " + analisisPrograma.get(index).getNombreProyecto() + " </option>");
             }
@@ -107,6 +109,9 @@ public class MainView {
             resp.getWriter().println("</div>");
             resp.getWriter().println("</div>");
             
+            resp.getWriter().println("<div id=\"seleccione\" name=\"seleccione\" style=\"display:block;\">");
+            resp.getWriter().println("</div>");
+              
             for (int index = 0; index < analisisPrograma.size(); index++) {
                 agregarPrograma(resp, analisisPrograma.get(index), index);
             }
@@ -132,11 +137,8 @@ public class MainView {
      */
     private static void agregarPrograma(HttpServletResponse resp, CalcularLoc programa, int numeroPrograma) throws Exception {
         try {
-            if (numeroPrograma == 0) {
-                resp.getWriter().println("<div id=\"programa" + numeroPrograma + "\" name=\"programa" + numeroPrograma + "\" style=\"display:block;\"><br/><br/>");
-            } else {
-                resp.getWriter().println("<div id=\"programa" + numeroPrograma + "\" name=\"programa" + numeroPrograma + "\" style=\"display:none;\"><br/><br/>");
-            }
+            
+            resp.getWriter().println("<div id=\"programa" + numeroPrograma + "\" name=\"programa" + numeroPrograma + "\" style=\"display:none;\"><br/><br/>");
             resp.getWriter().println("<div align=\"center\" class=\"titulo1\">Programa: " + programa.getNombreProyecto()+"</div><br/><br/>");
             resp.getWriter().println("<table class=\"myTable\" style=\"margin: 0 auto;\">");
             resp.getWriter().println("<tr>");
@@ -153,8 +155,6 @@ public class MainView {
             resp.getWriter().println("<td style=\"font-weight: bold;\">" + programa.getContadorLoc() + "</td>");
             resp.getWriter().println("</tr>");
             resp.getWriter().println("</table><br/><br/>");
-
-
             
             resp.getWriter().println("<table class=\"myTable\" style=\"margin: 0 auto;\">");
             resp.getWriter().println("<tr><td colspan =\"6\">");
