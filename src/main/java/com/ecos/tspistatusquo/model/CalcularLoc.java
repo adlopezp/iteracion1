@@ -142,7 +142,7 @@ public class CalcularLoc {
                     nombreMetodos.add(new ArrayList<String>());
                     contadorLocMetodos.add(new ArrayList<BigInteger>());
                     indexMetodos = -1;
-                    nombreClases.get(indexClass).add(matcher.group(1) + matcher.group(2) + " " + matcher.group(3));
+                    nombreClases.get(indexClass).add(matcher.group(1) + matcher.group(3) + " " + matcher.group(4));
                     flag = false;
                 }
             }
