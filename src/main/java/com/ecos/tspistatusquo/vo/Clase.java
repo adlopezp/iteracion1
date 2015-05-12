@@ -17,8 +17,9 @@ public class Clase {
     private String nombre;
     private String visibilidad;
     private int lineas = 0;
-    final private List<Metodo> metodos = new ArrayList<Metodo>();
-    final private List<Atributo> atributos = new ArrayList<Atributo>();
+    private int lineasError = 0;
+    private final List<Metodo> metodos = new ArrayList<Metodo>();
+    private final List<Atributo> atributos = new ArrayList<Atributo>();
     
     /**
      * @return the nombre
@@ -65,6 +66,10 @@ public class Clase {
     public void addLOC() {
         lineas++;
     }
+    
+    public void addError() {
+        lineasError++;
+    }
 
     public String getVisibilidad() {
         return visibilidad;
@@ -80,6 +85,14 @@ public class Clase {
     
     public void addAtributo(final Atributo atributo){
         atributos.add(atributo);
+    }
+
+    public int getLineasError() {
+        return lineasError;
+    }
+
+    public void setLineasError(int lineasError) {
+        this.lineasError = lineasError;
     }
     
 }

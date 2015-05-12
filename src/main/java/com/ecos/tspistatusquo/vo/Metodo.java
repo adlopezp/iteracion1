@@ -1,5 +1,8 @@
 package com.ecos.tspistatusquo.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Alvaro
@@ -9,7 +12,7 @@ public class Metodo {
     private String nombre;
     private String visibilidad;
     private String tipo;
-    private int lineas = 0;
+    private List<String> codigo = new ArrayList<String>();
 
     /**
      * @return the nombre
@@ -25,18 +28,9 @@ public class Metodo {
         this.nombre = nombre;
     }
 
-    /**
-     * @return the lineas
-     */
-    public int getLineas() {
-        return lineas;
-    }
 
-    /**
-     * @param lineas the lineas to set
-     */
-    public void setLineas(int lineas) {
-        this.lineas = lineas;
+    public int getLineas() {
+        return codigo.size();
     }
 
     public String getVisibilidad() {
@@ -55,8 +49,7 @@ public class Metodo {
         this.tipo = tipo;
     }
 
-    public void addLOC() {
-        lineas++;
+    public void addLinea(final String linea) {
+        codigo.add(linea);
     }
-
 }

@@ -20,36 +20,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *  Clase encargada de calcular la cantidad de LOC
+ * Clase encargada de calcular la cantidad de LOC
+ *
  * @author Dev
  */
 public class CalcularLoc {
 
-//    private BigInteger contadorLMod = BigInteger.ZERO;
-//    private BigInteger contadorLEli = BigInteger.ZERO;
-//    private BigInteger contadorLoc = BigInteger.ZERO;
-//    private BigInteger contadorLocMetodo = BigInteger.ZERO;
-    
-    private String nombreProyecto = null;
-    private String nombrePaquete = null;
-//    private List<BigInteger> clasesXpaquetes = new ArrayList<BigInteger>();
-    
-    //d
-//    private List<BigInteger> contadorLocClases = new ArrayList<BigInteger>();
-    private Map<String, List<BigInteger>> paquetes = new HashMap<String, List<BigInteger>>();
-    
-//    private List<List<String>> nombreClases = new ArrayList<List<String>>();
-//    private List<List<String>> nombreMetodos = new ArrayList<List<String>>();
-    
-//    private List<List<BigInteger>> contadorLocMetodos = new ArrayList<List<BigInteger>>();
-    
-//    private List<List<String>> nombreAtributos = new ArrayList<List<String>>();
+
     private FileInputStream fstream;
     private DataInputStream entrada = null;
     private BufferedReader buffer;
     private String strLinea = null;
-    
     private boolean enMetodo = false;
+    private boolean enComentario = false;
     private int contadorCorchetes = 0;
     
     private Aplicacion aplicacion = new Aplicacion();
@@ -139,41 +122,65 @@ public class CalcularLoc {
      * @param linea
      *
      */
-    private void SumarVariables(String linea) throws Exception{
+    private void SumarVariables(final String line) throws Exception {
         try {
+            String linea = line.trim();
+            boolean locValido = true;
             boolean flag = true;
+
             Pattern pt;
             Matcher matcher;
-            // Buscar Clases
-            if (flag) {
+            // Ignorar lineas vacias
+            // Ignorar lineas comentario simple
+            if (linea.isEmpty() || linea.indexOf("//") == 0) {
+                locValido = false;
+            }
+
+            if (locValido) {
+
+                if (enComentario) {
+                    locValido = false;
+                }
+
+                if (linea.indexOf("/*") == 0) {
+                    locValido = false;
+                    enComentario = true;
+                }
+                if (line.lastIndexOf("*/") == line.length() - 2) {
+                    locValido = false;
+                    enComentario = false;
+                }
+
+            }
+
+            // Buscar Definicion Clase
+            if (locValido) {
                 pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.clases"), Pattern.CASE_INSENSITIVE);
                 matcher = pt.matcher(linea);
                 if (matcher.find()) {
-                    
-                    claseActual = new Clase();
-                    claseActual.addLOC();
                     claseActual.setNombre(matcher.group(4));
                     claseActual.setVisibilidad(matcher.group(1));
                     flag = false;
                 }
             }
-            // Buscar Atributos
-            if (flag) {
+
+            // Buscar Definicion Atributos
+            if (locValido && flag) {
                 pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.atributos"), Pattern.CASE_INSENSITIVE);
                 matcher = pt.matcher(linea);
                 if (matcher.find()) {
-                    
+
                     final Atributo atributo = new Atributo();
                     atributo.setVisbilidad(matcher.group(1));
                     atributo.setTipo(matcher.group(2));
                     atributo.setNombre(matcher.group(3));
                     claseActual.addAtributo(atributo);
-                    claseActual.addLOC();
                     flag = false;
                 }
             }
-            // Buscar Metodos
-            if (flag) {
+
+            // Buscar Definicion Metodos
+            if (locValido && flag) {
                 pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.metodos"), Pattern.MULTILINE);
                 matcher = pt.matcher(linea);
                 if (matcher.find()) {
@@ -181,12 +188,10 @@ public class CalcularLoc {
                     metodoActual.setVisibilidad(matcher.group(1));
                     metodoActual.setTipo(matcher.group(2));
                     metodoActual.setNombre(matcher.group(4));
-                    metodoActual.addLOC();
                     claseActual.addMetodo(metodoActual);
-                    claseActual.addLOC();
                     flag = false;
                     enMetodo = true;
-                    
+
                     if (linea.contains("{")) {
                         contadorCorchetes = 1;
                     } else {
@@ -194,31 +199,27 @@ public class CalcularLoc {
                     }
                 }
             }
-            
-            if (flag) {
-                if (linea.contains("{")) {
-                    claseActual.addLOC();
-                    if(enMetodo) {
-                        metodoActual.addLOC();
-                        contadorCorchetes++;
-                    }
-                } 
 
-                if (linea.contains("}")) {
-                    claseActual.addLOC();
-                    if(enMetodo){
-                        metodoActual.addLOC();
-                        contadorCorchetes--;
-                        if (contadorCorchetes == 0) {
-                            enMetodo = false;
-                        }
+            if (locValido && flag) {
+                if (linea.contains("{") && enMetodo) {
+                    contadorCorchetes++;
+                }
+
+                if (linea.contains("}") && enMetodo) {
+                    contadorCorchetes--;
+                    if (contadorCorchetes == 0) {
+                        enMetodo = false;
                     }
                 }
-                
             }
-            
-            
-            
+
+            if (locValido) {
+                claseActual.addLOC();
+                if (enMetodo) {
+                    metodoActual.addLinea(linea);
+                }
+            }
+
 //            pt = Pattern.compile(Configuraciones.getProp().getProperty("regex.contadorLOC"), Pattern.CASE_INSENSITIVE);
 //            matcher = pt.matcher(linea);
 //            while (matcher.find()) {
@@ -239,70 +240,5 @@ public class CalcularLoc {
             System.out.println("Ocurrio un Error : " + ex.getMessage());
             throw new ExceptionApp("Error al calcular las variables de anailis del programa. " + ex.getMessage());
         }
-    }
-
-
-    /**
-     *
-     * @return
-     */
-    public Map<String, List<BigInteger>> getPaquetes() {
-        return paquetes;
-    }
-
-    /**
-     *
-     * @param paquetes
-     */
-    public void setPaquetes(Map<String, List<BigInteger>> paquetes) {
-        this.paquetes = paquetes;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getNombreProyecto() {
-        return nombreProyecto;
-    }
-
-    /**
-     *
-     * @param nombreProyecto
-     */
-    public void setNombreProyecto(String nombreProyecto) {
-        this.nombreProyecto = nombreProyecto;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getNombrePaquete() {
-        return nombrePaquete;
-    }
-
-    /**
-     *
-     * @param nombrePaquete
-     */
-    public void setNombrePaquete(String nombrePaquete) {
-        this.nombrePaquete = nombrePaquete;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getContadorCorchetes() {
-        return contadorCorchetes;
-    }
-
-    /**
-     *
-     * @param contadorCorchetes
-     */
-    public void setContadorCorchetes(int contadorCorchetes) {
-        this.contadorCorchetes = contadorCorchetes;
     }
 }
