@@ -1,4 +1,4 @@
-TSPi Iteración 1
+TSPi Iteración 2
 
 Staus QUO
 
@@ -10,9 +10,9 @@ Para descargar el proyecto desde el repositorio de GitHub, seguir los siguientes
 - Ubicarse en la raiz de la carpeta de proyectos
 - Ejecutar el siguiente comando:
 
-git clone https://github.com/ecosstatusquo/iteracion1.git iteraciontsp1
+git clone https://github.com/ecosstatusquo/iteracion1.git iteraciontsp2
 
-Se creará una carpeta llamada "iteraciontsp1" con todo el contenido del repositorio, se puede cambiar el nombre de la carpeta.
+Se creará una carpeta llamada "iteraciontsp2" con todo el contenido del repositorio, se puede cambiar el nombre de la carpeta.
 
 
 EJECUCIÓN
