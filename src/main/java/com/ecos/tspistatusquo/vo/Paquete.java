@@ -45,7 +45,7 @@ public class Paquete {
     /**
      * @param metodo objeto Metodo a ser agregado
      */
-    public void addMetodo(final Clase clase){
+    public void addClase(final Clase clase){
         clases.add(clase);
     }
 }

@@ -30,7 +30,7 @@ public class Main extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        MainView.showHome(req, resp);
+//        MainView.showHome(req, resp);
     }
     
     /**

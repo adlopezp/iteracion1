@@ -15,6 +15,7 @@ import java.util.List;
 public class Clase {
     
     private String nombre;
+    private String nombreArchivo;
     private String visibilidad;
     private int lineas = 0;
     private int lineasError = 0;
@@ -93,6 +94,14 @@ public class Clase {
 
     public void setLineasError(int lineasError) {
         this.lineasError = lineasError;
+    }
+
+    public String getNombreArchivo() {
+        return nombreArchivo;
+    }
+
+    public void setNombreArchivo(String nombreArchivo) {
+        this.nombreArchivo = nombreArchivo;
     }
     
 }

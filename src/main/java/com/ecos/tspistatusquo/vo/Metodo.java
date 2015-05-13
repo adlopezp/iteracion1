@@ -12,6 +12,7 @@ public class Metodo {
     private String nombre;
     private String visibilidad;
     private String tipo;
+    private int complejidad;
     private List<String> codigo = new ArrayList<String>();
 
     /**
@@ -30,7 +31,7 @@ public class Metodo {
 
 
     public int getLineas() {
-        return codigo.size();
+        return getCodigo().size();
     }
 
     public String getVisibilidad() {
@@ -50,6 +51,18 @@ public class Metodo {
     }
 
     public void addLinea(final String linea) {
-        codigo.add(linea);
+        getCodigo().add(linea);
+    }
+
+    public List<String> getCodigo() {
+        return codigo;
+    }
+
+    public int getComplejidad() {
+        return complejidad;
+    }
+
+    public void setComplejidad(int complejidad) {
+        this.complejidad = complejidad;
     }
 }

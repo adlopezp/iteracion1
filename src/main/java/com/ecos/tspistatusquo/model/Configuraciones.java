@@ -16,14 +16,14 @@ import java.util.Properties;
  */
 public abstract class Configuraciones {
 
-    private static Properties prop = new Properties();
+    private static Properties prop;
     private static String sDirectorioTrabajo = System.getProperty("user.dir");
     private static String sSeparator = System.getProperty("file.separator");
     private static String propFileName = "ConfigProperties.properties";
 
-    public static void cargaPropiedades() throws Exception{
+    private static void cargaPropiedades() throws ExceptionApp{
         try {
-            InputStream inputStream = new FileInputStream(sDirectorioTrabajo + sSeparator + propFileName);
+            final InputStream inputStream = new FileInputStream(sDirectorioTrabajo + sSeparator + propFileName);
             if (inputStream != null) {
                 prop.load(inputStream);
             } else {
@@ -38,36 +38,11 @@ public abstract class Configuraciones {
         }
     }
 
-    public static Properties getProp() {
+    public static Properties getProp() throws ExceptionApp {
+        if(prop == null) {
+            prop = new Properties();
+            cargaPropiedades();
+        }
         return prop;
-    }
-
-    public static void setProp(Properties prop) {
-        Configuraciones.prop = prop;
-    }
-
-    public static String getsDirectorioTrabajo() {
-        return sDirectorioTrabajo;
-    }
-
-    public static void setsDirectorioTrabajo(String sDirectorioTrabajo) {
-        Configuraciones.sDirectorioTrabajo = sDirectorioTrabajo;
-    }
-
-    public static String getsSeparator() {
-        return sSeparator;
-    }
-
-    public static void setsSeparator(String sSeparator) {
-        Configuraciones.sSeparator = sSeparator;
-    }
-
-    public static String getPropFileName() {
-        return propFileName;
-    }
-
-    public static void setPropFileName(String propFileName) {
-        Configuraciones.propFileName = propFileName;
-    }
-    
+    }    
 }
